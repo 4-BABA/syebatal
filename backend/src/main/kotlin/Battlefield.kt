@@ -10,65 +10,65 @@ class Battlefield {
     }
 
     fun addShip(point1: Point, point2: Point) {
-        val shipCoords = pointsRange(point1, point2)
-        shipCoords.forEach {
+        val ship = pointsRange(point1, point2)
+        ship.forEach {
             matrix.set(it, BattlefieldValue.FILLED)
         }
-        val spaceAround = shipCoords.spaceAround()
-        spaceAround.forEach { matrix.set(it, BattlefieldValue.EMPTY) }
+        ship.spaceAround()
+            .forEach { matrix.set(it, BattlefieldValue.EMPTY) }
     }
 
     private fun valid(point: Point) =
         point.x in 0 until SIDE_SIZE &&
                 point.y in 0 until SIDE_SIZE
 
-    private fun List<Point>.spaceAround(): List<Point> {
-        val vertical = this.first().x == this.last().x
-        val spaceAround = mutableListOf<Point>()
-        for (point in this) {
-            val newCoords =
-                if (vertical)
-                    listOf(
-                        Point(point.x - 1, point.y),
-                        Point(point.x + 1, point.y))
-                else
-                    listOf(
-                        Point(point.x, point.y - 1),
-                        Point(point.x, point.y + 1))
-            newCoords.forEach { newCoord ->
-                if (valid(newCoord)) {
-                    spaceAround.add(newCoord)
-                }
-            }
+    private fun isVertical(ship: List<Point>) = ship.first().x == ship.last().x
+
+    // visualisation for vertical ship
+    // [ prePreHead ]    ....    [ postPreHead ]
+    //      ....       [ ship ]       ....
+    //      ....       [ ship ]       ....
+    // [ prePostEnd ]    ....    [ postPostEnd ]
+    private fun getPreHeadAndPostTail(ship: List<Point>): Collection<Point> {
+        val prePreHead: Point
+        val postPreHead: Point
+        val prePostEnd: Point
+        val postPostEnd: Point
+        if (isVertical(ship)) {
+            prePreHead = Point(ship.first().x - 1, ship.first().y - 1)
+            postPreHead = Point(ship.first().x + 1, ship.first().y - 1)
+            prePostEnd = Point(ship.last().x - 1, ship.last().y + 1)
+            postPostEnd = Point(ship.last().x + 1, ship.last().y + 1)
+
+        } else {
+            prePreHead = Point(ship.first().x - 1, ship.first().y - 1)
+            postPreHead = Point(ship.first().x - 1, ship.first().y + 1)
+            prePostEnd = Point(ship.last().x + 1, ship.last().y - 1)
+            postPostEnd = Point(ship.last().x + 1, ship.last().y + 1)
         }
-        // visualisation for vertical ship
-        // [ prePreStart ]    ....    [ postPreStart ]
-        //      ....        [ ship ]        ....
-        //  [ prePostEnd ]    ....    [ postPostEnd ]
-        val twoRanges =
+        val pointsRange = pointsRange(prePreHead, postPreHead)
+        return pointsRange.union(pointsRange(prePostEnd, postPostEnd))
+    }
+
+    private fun getBodyFat(ship: List<Point>): List<Point> {
+        val vertical = isVertical(ship)
+        val bodyFat = mutableListOf<Point>()
+        ship.forEach { point ->
             if (vertical) {
-                val prePreStart = Point(this.first().x - 1, this.first().y - 1)
-                val postPreStart = Point(this.first().x + 1, this.first().y - 1)
-                val prePostEnd = Point(this.last().x - 1, this.last().y + 1)
-                val postPostEnd = Point(this.last().x + 1, this.last().y + 1)
-                listOf(
-                    pointsRange(prePreStart, postPreStart),
-                    pointsRange(prePostEnd, postPostEnd)
-                )
+                bodyFat.add(Point(point.x - 1, point.y))
+                bodyFat.add(Point(point.x + 1, point.y))
             } else {
-                val prePreStart = Point(this.first().x - 1, this.first().y - 1)
-                val postPreStart = Point(this.first().x - 1, this.first().y + 1)
-                val prePostEnd = Point(this.last().x + 1, this.last().y - 1)
-                val postPostEnd = Point(this.last().x + 1, this.last().y + 1)
-                listOf(
-                    pointsRange(prePreStart, postPreStart),
-                    pointsRange(prePostEnd, postPostEnd)
-                )
+                bodyFat.add(Point(point.x, point.y - 1))
+                bodyFat.add(Point(point.x, point.y + 1))
             }
-        twoRanges.map { range ->
-            range.forEach { point -> if (valid(point)) spaceAround.add(point) }
         }
-        return spaceAround
+        return bodyFat
+    }
+
+    private fun List<Point>.spaceAround(): List<Point> {
+        return getBodyFat(this)
+            .union(getPreHeadAndPostTail(this))
+            .filter { valid(it) }
     }
 }
 
