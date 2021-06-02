@@ -1,8 +1,6 @@
-
 name: Unit tests
 
 on:
-  push:
   pull_request:
     branches: [ master ]
 
@@ -12,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          distribution: 'adopt'
-      - name: Run gradle wrapper
-        run: gradle wrapper
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Run unit tests on JVM with Gradle
-        run: ./gradlew cleanJvmTest jvmTest
+    - uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+    - name: Run gradle wrapper
+      run: gradle wrapper
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Run unit tests on JVM with Gradle
+      run: ./gradlew cleanJvmTest jvmTest
