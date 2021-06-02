@@ -1,6 +1,5 @@
 package io.baba4.syebatal
 
-
 enum class BfCell(val symbol: Char) {
     UNKNOWN(symbol = ' '),
     EMPTY(symbol = '•'),

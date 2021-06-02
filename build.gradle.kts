@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.5.10"
+    id("io.gitlab.arturbosch.detekt") version "1.17.1"
 }
 
 group = "io.4baba"
@@ -48,5 +49,22 @@ kotlin {
         val jsTest by getting
         val nativeMain by getting
         val nativeTest by getting
+    }
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
+}
+
+detekt {
+    toolVersion = "1.17.1"
+    failFast = true
+    buildUponDefaultConfig = true
+    input = files("$projectDir/src/commonMain")
+    config = files("$projectDir/config/detekt.yml")
+
+    reports.html {
+        enabled = true
+        destination = file("$projectDir/reports/detekt.html")
     }
 }
