@@ -1,10 +1,12 @@
 package io.baba4.syebatal
 
+
 enum class BfCell(val symbol: Char) {
-    UNKNOWN(symbol = ' '),
+    UNCHECKED(symbol = ' '),
     EMPTY(symbol = '•'),
     FILLED(symbol = '☐'),
     DAMAGED(symbol = '☒');
+
 
     companion object {
         fun fromSymbol(symbol: Char) = values().find { it.symbol == symbol } ?: illegalSymbol(symbol)
