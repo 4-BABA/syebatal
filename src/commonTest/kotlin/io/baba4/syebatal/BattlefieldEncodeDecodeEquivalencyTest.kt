@@ -8,8 +8,8 @@ class BattlefieldEncodeDecodeEquivalencyTest {
     @Test
     fun encodeDecodeEquivalencyTest() = repeat(times = 20) { size ->
         repeat(times = 5) {
-            val bfMatrix = Battlefield(size) { _, _ -> BfCell.values().random() }
-            assertEquals(actual = Battlefield.decode(bfMatrix.encode()), expected = bfMatrix)
+            val battlefield = Battlefield(size) { _, _ -> BfCell.values().random() }
+            assertEquals(actual = Battlefield.decode(battlefield.encode()), expected = battlefield)
         }
     }
 }
