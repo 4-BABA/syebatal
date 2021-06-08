@@ -12,19 +12,19 @@ class BattlefieldEncodeTest : BattlefieldTest() {
 
     @Test
     fun encodeEmptyBattlefield() = testEncode(
-        input = Battlefield(size = 0) { _, _ -> EMPTY },
+        input = Battlefield(size = 0) { EMPTY },
         output = "0|"
     )
 
     @Test
     fun encodeOneSizeBattlefield() = testEncode(
-        input = Battlefield(size = 1) { _, _ -> EMPTY },
+        input = Battlefield(size = 1) { EMPTY },
         output = "1|•"
     )
 
     @Test
     fun encodeTwoSizeBattlefield() = testEncode(
-        input = Battlefield(size = 2) { _, _ -> EMPTY },
+        input = Battlefield(size = 2) { EMPTY },
         output = "2|••••"
     )
 

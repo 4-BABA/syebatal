@@ -2,7 +2,7 @@ package io.baba4.syebatal
 
 
 open class BattlefieldTest {
-    protected val customBattlefield = Battlefield(size = 3) { row, column ->
+    protected val customBattlefield = Battlefield(size = 3) { (row, column) ->
         when (row to column) {
             1 to 0, 1 to 2 -> BfCell.UNCHECKED
             0 to 0, 1 to 1 -> BfCell.EMPTY

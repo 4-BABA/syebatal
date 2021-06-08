@@ -13,19 +13,19 @@ class BattlefieldDecodeTest : BattlefieldTest() {
     @Test
     fun decodeEmptyBattlefield() = testDecode(
         input = "0|",
-        output = Battlefield(size = 0) { _, _ -> EMPTY }
+        output = Battlefield(size = 0) { EMPTY }
     )
 
     @Test
     fun decodeOneSizeBattlefield() = testDecode(
         input = "1|•",
-        output = Battlefield(size = 1) { _, _ -> EMPTY }
+        output = Battlefield(size = 1) { EMPTY }
     )
 
     @Test
     fun decodeTwoSizeBattlefield() = testDecode(
         input = "2|••••",
-        output = Battlefield(size = 2) { _, _ -> EMPTY }
+        output = Battlefield(size = 2) { EMPTY }
     )
 
     @Test
