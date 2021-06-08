@@ -1,4 +1,7 @@
-package io.baba4.syebatal
+package io.baba4.syebatal.bf
+
+import io.baba4.syebatal.Battlefield
+import io.baba4.syebatal.BfCell
 
 
 open class BattlefieldTest {
