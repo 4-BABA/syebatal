@@ -77,21 +77,21 @@ fun Battlefield.findShip(point: Point): Ship? {
     val orientation = when {
         leftPoint != null && table[leftPoint].isShip || rightPoint != null && table[rightPoint].isShip -> HORIZONTAL
         topPoint != null && table[topPoint].isShip || bottomPoint != null && table[bottomPoint].isShip -> VERTICAL
-        else -> return null
+        else -> return Ship(point)
     }
     val points = when (orientation) {
-        HORIZONTAL -> takeHorizontalPointsWhileShip(point.column, range = point.row - 1 downTo 0).asReversed() +
+        HORIZONTAL -> takeHorizontalPointsWhileShip(point.row, range = point.column - 1 downTo 0).asReversed() +
                 point +
-                takeHorizontalPointsWhileShip(point.column, range = point.row + 1 until size)
-        VERTICAL -> takeVerticalPointsWhileShip(point.row, range = point.column - 1 downTo 0).asReversed() +
+                takeHorizontalPointsWhileShip(point.row, range = point.column + 1 until size)
+        VERTICAL -> takeVerticalPointsWhileShip(point.column, range = point.row - 1 downTo 0).asReversed() +
                 point +
-                takeVerticalPointsWhileShip(point.row, range = point.column + 1 until size)
+                takeVerticalPointsWhileShip(point.column, range = point.row + 1 until size)
     }
     return Ship(points)
 }
 
-private fun Battlefield.takeHorizontalPointsWhileShip(column: Int, range: IntProgression): List<Point> =
-    range.map { Point(row = it, column) }.takeWhile { table[it].isShip }
-
-private fun Battlefield.takeVerticalPointsWhileShip(row: Int, range: IntProgression): List<Point> =
+private fun Battlefield.takeHorizontalPointsWhileShip(row: Int, range: IntProgression): List<Point> =
     range.map { Point(row, column = it) }.takeWhile { table[it].isShip }
+
+private fun Battlefield.takeVerticalPointsWhileShip(column: Int, range: IntProgression): List<Point> =
+    range.map { Point(row = it, column) }.takeWhile { table[it].isShip }
