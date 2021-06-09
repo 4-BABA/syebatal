@@ -87,7 +87,7 @@ fun Battlefield.findShip(point: Point): Ship? {
                 point +
                 takeVerticalPointsWhileShip(point.row, range = point.column + 1 until size)
     }
-    return Ship(orientation, points)
+    return Ship(points)
 }
 
 private fun Battlefield.takeHorizontalPointsWhileShip(column: Int, range: IntProgression): List<Point> =
