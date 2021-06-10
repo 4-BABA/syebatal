@@ -1,6 +1,6 @@
 package io.baba4.syebatal.bf
 
-import io.baba4.syebatal.Battlefield
+import io.baba4.syebatal.Battlefield1 as Battlefield
 import io.baba4.syebatal.BfCell.*
 import io.baba4.syebatal.Point
 import io.baba4.syebatal.Ship

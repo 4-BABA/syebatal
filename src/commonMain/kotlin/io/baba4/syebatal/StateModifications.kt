@@ -8,6 +8,6 @@ val State.currentPlayer: Player get() = players[currentPlayerIndex]
 fun State.shoot(point: Point): State = copy(
     battlefields = battlefields.mapIndexed { index, battlefield ->
         if (index == currentPlayerIndex) battlefield
-        else battlefield.shootAt(point)
+        else battlefield.shotAt(point)
     }
 )

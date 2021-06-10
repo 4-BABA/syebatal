@@ -1,7 +1,7 @@
-package io.baba4.syebatal.bf
+package io.baba4.syebatal.bf2
 
-import io.baba4.syebatal.Battlefield1 as Battlefield
-import io.baba4.syebatal.BfCell.*
+import io.baba4.syebatal.Point
+import io.baba4.syebatal.Battlefield2 as Battlefield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -13,19 +13,28 @@ class BattlefieldEncodeTest : BattlefieldTest() {
 
     @Test
     fun encodeEmptyBattlefield() = testEncode(
-        input = Battlefield(size = 0) { EMPTY },
+        input = Battlefield(size = 0, ships = emptyList(), emptyPoints = emptySet()),
         output = "0|"
     )
 
     @Test
     fun encodeOneSizeBattlefield() = testEncode(
-        input = Battlefield(size = 1) { EMPTY },
+        input = Battlefield(size = 1, ships = emptyList(), emptyPoints = setOf(Point(row = 0, column = 0))),
         output = "1|•"
     )
 
     @Test
     fun encodeTwoSizeBattlefield() = testEncode(
-        input = Battlefield(size = 2) { EMPTY },
+        input = Battlefield(
+            size = 2,
+            ships = emptyList(),
+            emptyPoints = setOf(
+                Point(row = 0, column = 0),
+                Point(row = 0, column = 1),
+                Point(row = 1, column = 0),
+                Point(row = 1, column = 1),
+            )
+        ),
         output = "2|••••"
     )
 

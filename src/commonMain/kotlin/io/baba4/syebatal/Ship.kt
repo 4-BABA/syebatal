@@ -2,6 +2,7 @@ package io.baba4.syebatal
 
 import io.baba4.syebatal.Orientation.*
 
+
 data class Ship(
     val points: List<Point>
 ) {
