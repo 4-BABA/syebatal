@@ -7,12 +7,12 @@ import kotlin.test.assertFails
 
 class ShipTest {
     private val size = 6
-    private val horizontalShip = Ship(
+    private val horizontalShip = Ship1(
         Point(row = 2, column = 3),
         Point(row = 2, column = 4),
         Point(row = 2, column = 5),
     )
-    private val verticalShip = Ship(
+    private val verticalShip = Ship1(
         Point(row = 2, column = 3),
         Point(row = 3, column = 3),
         Point(row = 4, column = 3),
@@ -33,7 +33,7 @@ class ShipTest {
     @Test
     fun constructAngle() {
         assertFails {
-            Ship(
+            Ship1(
                 Point(row = 1, column = 1),
                 Point(row = 1, column = 2),
                 Point(row = 2, column = 2),

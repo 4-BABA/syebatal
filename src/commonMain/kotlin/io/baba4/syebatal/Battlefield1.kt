@@ -11,6 +11,15 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
     }
     val table: Array<Array<BfCell>> = Array(size) { row -> Array(size) { column -> initial(Point(row, column)) } }
 
+    override fun toString(): String = "$size$SEPARATOR\n" + buildString {
+        (0 until size).forEach { row ->
+            (0 until size).forEach { column ->
+                append(table[row][column].symbol)
+            }
+            append("\n")
+        }
+    }
+
     operator fun Array<Array<BfCell>>.get(point: Point): BfCell = this[point.row][point.column]
 
     override fun equals(other: Any?): Boolean =
@@ -24,7 +33,7 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
         row.joinToString(separator = "") { it.symbol.toString() }
     }
 
-    fun isSunk(ship: Ship): Boolean = ship.points.all { table[it] == DAMAGED }
+    fun isSunk(ship: Ship1): Boolean = ship.points.all { table[it] == DAMAGED }
 
     fun shotAt(point: Point): Battlefield1 {
         val newValue = when (val oldValue = table[point]) {
@@ -35,18 +44,24 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
 
         return Battlefield1(size) { (row, column) ->
             val currentPoint = Point(row, column)
-            val ship = findShip(point)
-            val aroundPointForSunkShip =
-                newValue == DAMAGED && ship != null && isSunk(ship) && currentPoint in ship.pointsAround(size)
-            when {
-                point == currentPoint -> newValue
-                aroundPointForSunkShip -> EMPTY
-                else -> table[currentPoint]
+            if (point == currentPoint) newValue else table[currentPoint]
+        }.let { battlefield ->
+            Battlefield1(size) { (row, column) ->
+                val currentPoint = Point(row, column)
+                val ship = battlefield.findShip(point)
+                val aroundPointForSunkShip = newValue == DAMAGED &&
+                        ship != null &&
+                        battlefield.isSunk(ship) &&
+                        currentPoint in ship.pointsAround(size)
+                when {
+                    aroundPointForSunkShip -> EMPTY
+                    else -> battlefield.table[currentPoint]
+                }
             }
         }
     }
 
-    private fun findShip(point: Point): Ship? {
+    private fun findShip(point: Point): Ship1? {
         if (table[point].isNotShip) return null
 
         val leftPoint = point.left(size)
@@ -56,7 +71,7 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
         val orientation = when {
             leftPoint != null && table[leftPoint].isShip || rightPoint != null && table[rightPoint].isShip -> HORIZONTAL
             topPoint != null && table[topPoint].isShip || bottomPoint != null && table[bottomPoint].isShip -> VERTICAL
-            else -> return Ship(point)
+            else -> return Ship1(point)
         }
         val points = when (orientation) {
             HORIZONTAL -> takeHorizontalPointsWhileShip(point.row, range = point.column - 1 downTo 0).asReversed() +
@@ -66,7 +81,7 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
                     point +
                     takeVerticalPointsWhileShip(point.column, range = point.row + 1 until size)
         }
-        return Ship(points)
+        return Ship1(points)
     }
 
     private fun takeHorizontalPointsWhileShip(row: Int, range: IntProgression): List<Point> =

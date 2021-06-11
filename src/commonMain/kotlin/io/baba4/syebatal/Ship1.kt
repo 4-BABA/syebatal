@@ -3,7 +3,7 @@ package io.baba4.syebatal
 import io.baba4.syebatal.Orientation.*
 
 
-data class Ship(
+data class Ship1(
     val points: List<Point>
 ) {
     constructor(vararg points: Point) : this(points.toList())
@@ -15,5 +15,5 @@ data class Ship(
     }
 }
 
-fun Ship.pointsAround(bfSize: Int): Set<Point> =
+fun Ship1.pointsAround(bfSize: Int): Set<Point> =
     points.map { it.pointsAround(bfSize) }.flatten().toSet() - points

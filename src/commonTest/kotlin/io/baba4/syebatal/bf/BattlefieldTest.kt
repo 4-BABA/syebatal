@@ -3,7 +3,7 @@ package io.baba4.syebatal.bf
 import io.baba4.syebatal.Battlefield1 as Battlefield
 import io.baba4.syebatal.BfCell.*
 import io.baba4.syebatal.Point
-import io.baba4.syebatal.Ship
+import io.baba4.syebatal.Ship1
 
 
 open class BattlefieldTest {
@@ -36,16 +36,16 @@ open class BattlefieldTest {
 
     protected val emptyCell = Point(row = 0, column = 0)
 
-    protected val sunkShip = Ship(
+    protected val sunkShip = Ship1(
         Point(row = 0, column = 1),
         Point(row = 0, column = 2),
     )
-    protected val damagedShip = Ship(
+    protected val damagedShip = Ship1(
         Point(row = 4, column = 2),
         Point(row = 4, column = 3),
         Point(row = 4, column = 4),
     )
-    protected val wholeShip = Ship(
+    protected val wholeShip = Ship1(
         Point(row = 2, column = 1),
     )
 }

@@ -1,13 +1,13 @@
 package io.baba4.syebatal.bf
 
 import io.baba4.syebatal.Battlefield1 as Battlefield
-import io.baba4.syebatal.Ship
+import io.baba4.syebatal.Ship1
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
 class BattlefieldIsSunkTest : BattlefieldTest() {
-    private fun test(input: Pair<Battlefield, Ship>, output: Boolean) = assertEquals(
+    private fun test(input: Pair<Battlefield, Ship1>, output: Boolean) = assertEquals(
         actual = input.first.isSunk(input.second),
         expected = output
     )
