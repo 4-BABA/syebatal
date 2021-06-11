@@ -22,7 +22,7 @@ open class BattlefieldTest {
 
     protected val customBattlefield = Battlefield(
         size = 5,
-        ships = listOf(sunkShip, wholeShip, damagedShip),
+        ships = setOf(sunkShip, wholeShip, damagedShip),
         emptyPoints = setOf(
             Point(row = 0, column = 0),
             Point(row = 0, column = 3),

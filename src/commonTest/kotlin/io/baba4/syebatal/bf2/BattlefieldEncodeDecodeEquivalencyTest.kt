@@ -14,7 +14,7 @@ class BattlefieldEncodeDecodeEquivalencyTest {
     fun encodeDecodeEquivalencyTest() = repeat(times = 20) { index ->
         val battlefield = Battlefield(
             size = index + 1,
-            ships = listOf(
+            ships = setOf(
                 Ship2(Point(row = 0, column = 0) to FILLED)
             ),
             emptyPoints = emptySet(),

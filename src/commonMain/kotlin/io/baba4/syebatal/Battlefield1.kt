@@ -26,8 +26,6 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
 
     fun isSunk(ship: Ship): Boolean = ship.points.all { table[it] == DAMAGED }
 
-
-
     fun shotAt(point: Point): Battlefield1 {
         val newValue = when (val oldValue = table[point]) {
             UNCHECKED -> EMPTY

@@ -14,13 +14,13 @@ class BattlefieldDecodeTest : BattlefieldTest() {
     @Test
     fun decodeEmptyBattlefield() = testDecode(
         input = "0|",
-        output = Battlefield(size = 0, ships = emptyList(), emptyPoints = emptySet())
+        output = Battlefield(size = 0, ships = emptySet(), emptyPoints = emptySet())
     )
 
     @Test
     fun decodeOneSizeBattlefield() = testDecode(
         input = "1|•",
-        output = Battlefield(size = 1, ships = emptyList(), emptyPoints = setOf(Point(row = 0, column = 0)))
+        output = Battlefield(size = 1, ships = emptySet(), emptyPoints = setOf(Point(row = 0, column = 0)))
     )
 
     @Test
@@ -28,7 +28,7 @@ class BattlefieldDecodeTest : BattlefieldTest() {
         input = "2|••••",
         output = Battlefield(
             size = 2,
-            ships = emptyList(),
+            ships = emptySet(),
             emptyPoints = setOf(
                 Point(row = 0, column = 0),
                 Point(row = 0, column = 1),

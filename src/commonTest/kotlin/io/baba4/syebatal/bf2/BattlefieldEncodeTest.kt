@@ -13,13 +13,13 @@ class BattlefieldEncodeTest : BattlefieldTest() {
 
     @Test
     fun encodeEmptyBattlefield() = testEncode(
-        input = Battlefield(size = 0, ships = emptyList(), emptyPoints = emptySet()),
+        input = Battlefield(size = 0, ships = emptySet(), emptyPoints = emptySet()),
         output = "0|"
     )
 
     @Test
     fun encodeOneSizeBattlefield() = testEncode(
-        input = Battlefield(size = 1, ships = emptyList(), emptyPoints = setOf(Point(row = 0, column = 0))),
+        input = Battlefield(size = 1, ships = emptySet(), emptyPoints = setOf(Point(row = 0, column = 0))),
         output = "1|•"
     )
 
@@ -27,7 +27,7 @@ class BattlefieldEncodeTest : BattlefieldTest() {
     fun encodeTwoSizeBattlefield() = testEncode(
         input = Battlefield(
             size = 2,
-            ships = emptyList(),
+            ships = emptySet(),
             emptyPoints = setOf(
                 Point(row = 0, column = 0),
                 Point(row = 0, column = 1),

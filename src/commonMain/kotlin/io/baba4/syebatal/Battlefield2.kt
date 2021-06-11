@@ -5,7 +5,7 @@ import io.baba4.syebatal.BfCell.*
 
 data class Battlefield2(
     val size: Int,
-    val ships: List<Ship2>,
+    val ships: Set<Ship2>,
     val emptyPoints: Set<Point>
 ) {
     private fun traverseTable(block: (point: Point) -> Unit) {
@@ -51,7 +51,7 @@ data class Battlefield2(
         fun decode(string: String): Battlefield2 {
             val (sizeString, content) = string.split(SEPARATOR, limit = 2)
             val size = sizeString.toInt()
-            val ships: MutableList<Ship2> = mutableListOf()
+            val ships: MutableSet<Ship2> = mutableSetOf()
             val emptyPoints: MutableSet<Point> = mutableSetOf()
             content.forEachIndexed { index, char ->
                 val point = Point(row = index / size, column = index % size)
