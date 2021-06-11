@@ -8,35 +8,39 @@ data class Battlefield2(
     val ships: List<Ship2>,
     val emptyPoints: Set<Point>
 ) {
-    fun encode(): String = "$size$SEPARATOR" + buildString {
+    private fun traverseTable(block: (point: Point) -> Unit) {
         (0 until size).forEach { row ->
             (0 until size).forEach { column ->
-                val point = Point(row, column)
-                val shipCell = ships.map { it.decks.entries }.flatten().find { it.key == point }?.value
-                val cell = when {
-                    shipCell != null -> shipCell
-                    point in emptyPoints -> EMPTY
-                    else -> UNCHECKED
-                }
-                append(cell.symbol)
+                block(Point(row, column))
             }
         }
     }
 
-    fun shotAt(point: Point): Battlefield2 {
-        if (point in emptyPoints) {
-            return this
-        }
-        val ship = ships.find { point in it.points }
-        return when {
-            ship != null && ship.decks[point] == FILLED -> {
-                val newShip = Ship2(decks = ship.decks.filterKeys { it != point } + (point to DAMAGED))
-                val newEmptyPoints =
-                    if (newShip.isSunk) emptyPoints + newShip.pointsAround(size)
-                    else emptyPoints
-                copy(ships = ships - ship + newShip, emptyPoints = newEmptyPoints)
+    fun encode(): String = "$size$SEPARATOR" + buildString {
+        val unifiedDecksMap = ships.toUnifiedDecksMap()
+        traverseTable { point ->
+            val shipCell = unifiedDecksMap[point]
+            val cell = when {
+                point in emptyPoints -> EMPTY
+                shipCell != null -> shipCell
+                else -> UNCHECKED
             }
-            ship == null -> copy(emptyPoints = emptyPoints + point)
+            append(cell.symbol)
+        }
+    }
+
+    fun shotAt(point: Point): Battlefield2 {
+        val oldShip = ships.find { point in it.points }
+        return when {
+            point in emptyPoints -> this
+            oldShip != null && oldShip.decks[point] == FILLED -> {
+                val updatedShip =
+                    Ship2(decks = oldShip.decks.filterKeys { it != point } + (point to DAMAGED))
+                val updatedEmptyPoints =
+                    if (updatedShip.isSunk) emptyPoints + updatedShip.pointsAround(size) else emptyPoints
+                copy(ships = ships - oldShip + updatedShip, emptyPoints = updatedEmptyPoints)
+            }
+            oldShip == null -> copy(emptyPoints = emptyPoints + point)
             else -> this
         }
     }
@@ -50,7 +54,7 @@ data class Battlefield2(
             val ships: MutableList<Ship2> = mutableListOf()
             val emptyPoints: MutableSet<Point> = mutableSetOf()
             content.forEachIndexed { index, char ->
-                val point = Point(index / size, index % size)
+                val point = Point(row = index / size, column = index % size)
                 when (val cell = BfCell.fromSymbol(char)) {
                     FILLED, DAMAGED -> {
                         val currentShip = ships.find { ship ->
@@ -64,8 +68,7 @@ data class Battlefield2(
                         }
                     }
                     EMPTY -> emptyPoints += point
-                    UNCHECKED -> { /* do nothing */
-                    }
+                    UNCHECKED -> { /* do nothing */ }
                 }
             }
             return Battlefield2(size, ships, emptyPoints)

@@ -28,3 +28,7 @@ fun Ship2.pointsAround(bfSize: Int): Set<Point> =
 
 val Ship2.isSunk: Boolean get() = cells.all { it == DAMAGED }
 
+fun Collection<Ship2>.toUnifiedDecksMap(): Map<Point, BfCell> =
+    this.map { ship ->
+        ship.decks.map { entry -> entry.toPair() }
+    }.flatten().toMap()
