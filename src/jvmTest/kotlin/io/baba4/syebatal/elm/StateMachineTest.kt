@@ -17,9 +17,7 @@ open class StateMachineTest {
         stateMachine.start()
         delay(timeMillis = 50) // wait time to start state machine coroutines
         actions.forEach { stateMachine.setAction(it) }
-        stateMachine.stateFlow.drop(count = 1).take(count = 1).collect { state ->
-            stateMachine.stop()
-            assertEquals(actual = state, expected = expectedState)
-        }
+        delay(timeMillis = 50) // wait time to handle actions by state machine
+        assertEquals(actual = stateMachine.currentState, expected = expectedState)
     }
 }
