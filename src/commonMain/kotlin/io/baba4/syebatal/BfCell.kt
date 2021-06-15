@@ -14,7 +14,7 @@ enum class BfCell(val symbol: Char, val isShip: Boolean) {
         fun fromSymbol(symbol: Char) = values().find { it.symbol == symbol } ?: illegalSymbol(symbol)
 
         private fun illegalSymbol(symbol: Char): Nothing = throw IllegalArgumentException(
-            "Can't find ${BfCell::class.simpleName} for $symbol. Only ${values().map { it.symbol }} are allowed."
+            "Can't find \'${BfCell::class.simpleName}\' for $symbol. Only ${values().map { it.symbol }} are allowed."
         )
     }
 }
