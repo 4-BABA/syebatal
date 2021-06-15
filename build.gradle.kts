@@ -48,7 +48,12 @@ kotlin {
             }
         }
         val jvmMain by getting
-        val jvmTest by getting
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
+            }
+        }
         val jsMain by getting
         val jsTest by getting
         val nativeMain by getting
