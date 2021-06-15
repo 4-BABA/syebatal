@@ -1,9 +1,6 @@
 package io.baba4.syebatal.elm
 
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import kotlin.test.assertEquals
 
