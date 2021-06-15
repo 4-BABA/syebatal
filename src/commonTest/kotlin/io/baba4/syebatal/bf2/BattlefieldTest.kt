@@ -1,9 +1,9 @@
 package io.baba4.syebatal.bf2
 
-import io.baba4.syebatal.Battlefield2 as Battlefield
-import io.baba4.syebatal.BfCell.*
-import io.baba4.syebatal.Point
-import io.baba4.syebatal.Ship2
+import io.baba4.syebatal.models.Battlefield2 as Battlefield
+import io.baba4.syebatal.models.BfCell.*
+import io.baba4.syebatal.models.Point
+import io.baba4.syebatal.models.Ship2
 
 
 open class BattlefieldTest {

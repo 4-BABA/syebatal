@@ -1,6 +1,6 @@
 package io.baba4.syebatal.elm
 
-import io.baba4.syebatal.Point
+import io.baba4.syebatal.models.Point
 
 
 sealed class Action : Elm.Action {

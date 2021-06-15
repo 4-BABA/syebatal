@@ -1,10 +1,9 @@
 package io.baba4.syebatal.bf2
 
-import io.baba4.syebatal.BfCell
-import io.baba4.syebatal.BfCell.*
-import io.baba4.syebatal.Point
-import io.baba4.syebatal.Ship2
-import io.baba4.syebatal.Battlefield2 as Battlefield
+import io.baba4.syebatal.models.BfCell.*
+import io.baba4.syebatal.models.Point
+import io.baba4.syebatal.models.Ship2
+import io.baba4.syebatal.models.Battlefield2 as Battlefield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -19,6 +18,6 @@ class BattlefieldEncodeDecodeEquivalencyTest {
             ),
             emptyPoints = emptySet(),
         )
-        assertEquals(actual = Battlefield.decode(battlefield.encode()), expected = battlefield)
+        assertEquals(actual = io.baba4.syebatal.models.Battlefield2.decode(battlefield.encode()), expected = battlefield)
     }
 }

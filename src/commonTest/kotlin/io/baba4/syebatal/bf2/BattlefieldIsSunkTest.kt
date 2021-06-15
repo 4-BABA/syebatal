@@ -1,7 +1,7 @@
 package io.baba4.syebatal.bf2
 
-import io.baba4.syebatal.Ship2
-import io.baba4.syebatal.isSunk
+import io.baba4.syebatal.models.Ship2
+import io.baba4.syebatal.models.isSunk
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

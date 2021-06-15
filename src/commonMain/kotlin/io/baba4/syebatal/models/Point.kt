@@ -1,4 +1,4 @@
-package io.baba4.syebatal
+package io.baba4.syebatal.models
 
 
 data class Point(val row: Int, val column: Int)

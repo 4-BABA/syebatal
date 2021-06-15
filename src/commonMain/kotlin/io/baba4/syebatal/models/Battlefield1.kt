@@ -1,7 +1,7 @@
-package io.baba4.syebatal
+package io.baba4.syebatal.models
 
-import io.baba4.syebatal.BfCell.*
-import io.baba4.syebatal.Orientation.*
+import io.baba4.syebatal.models.BfCell.*
+import io.baba4.syebatal.models.Orientation.*
 import kotlin.math.sqrt
 
 

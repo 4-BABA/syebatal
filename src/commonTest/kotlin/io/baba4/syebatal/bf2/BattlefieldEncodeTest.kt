@@ -1,7 +1,7 @@
 package io.baba4.syebatal.bf2
 
-import io.baba4.syebatal.Point
-import io.baba4.syebatal.Battlefield2 as Battlefield
+import io.baba4.syebatal.models.Point
+import io.baba4.syebatal.models.Battlefield2 as Battlefield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

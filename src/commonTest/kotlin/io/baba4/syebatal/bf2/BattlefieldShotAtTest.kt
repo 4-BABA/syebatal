@@ -1,9 +1,9 @@
 package io.baba4.syebatal.bf2
 
-import io.baba4.syebatal.Point
+import io.baba4.syebatal.models.Point
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import io.baba4.syebatal.Battlefield2 as Battlefield
+import io.baba4.syebatal.models.Battlefield2 as Battlefield
 
 
 class BattlefieldShotAtTest : BattlefieldTest() {
@@ -15,7 +15,7 @@ class BattlefieldShotAtTest : BattlefieldTest() {
     @Test
     fun shotAtWholeShip() = test(
         input = customBattlefield to Point(row = 2, column = 1),
-        output = Battlefield.decode(
+        output = io.baba4.syebatal.models.Battlefield2.decode(
             string = "5|" +
                     "•☒☒• " +
                     "•••• " +
@@ -28,7 +28,7 @@ class BattlefieldShotAtTest : BattlefieldTest() {
     @Test
     fun shotAtDamagedShip() = test(
         input = customBattlefield to Point(row = 4, column = 3),
-        output = Battlefield.decode(
+        output = io.baba4.syebatal.models.Battlefield2.decode(
             string = "5|" +
                     "•☒☒• " +
                     "•••• " +
@@ -53,7 +53,7 @@ class BattlefieldShotAtTest : BattlefieldTest() {
     @Test
     fun shotAtUncheckedCell() = test(
         input = customBattlefield to Point(row = 4, column = 0),
-        output = Battlefield.decode(
+        output = io.baba4.syebatal.models.Battlefield2.decode(
             string = "5|" +
                     "•☒☒• " +
                     "•••• " +

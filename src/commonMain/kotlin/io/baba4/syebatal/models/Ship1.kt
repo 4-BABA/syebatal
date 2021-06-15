@@ -1,6 +1,6 @@
-package io.baba4.syebatal
+package io.baba4.syebatal.models
 
-import io.baba4.syebatal.Orientation.*
+import io.baba4.syebatal.models.Orientation.*
 
 
 data class Ship1(

@@ -1,5 +1,9 @@
 package io.baba4.syebatal
 
+import io.baba4.syebatal.models.Orientation
+import io.baba4.syebatal.models.Point
+import io.baba4.syebatal.models.Ship1
+import io.baba4.syebatal.models.pointsAround
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails

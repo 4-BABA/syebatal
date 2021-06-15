@@ -1,4 +1,4 @@
-package io.baba4.syebatal
+package io.baba4.syebatal.models
 
 
 enum class BfCell(val symbol: Char, val isShip: Boolean) {

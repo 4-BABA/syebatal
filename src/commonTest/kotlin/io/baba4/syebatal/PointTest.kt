@@ -1,5 +1,6 @@
 package io.baba4.syebatal
 
+import io.baba4.syebatal.models.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

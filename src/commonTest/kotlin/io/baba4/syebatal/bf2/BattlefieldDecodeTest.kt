@@ -1,14 +1,14 @@
 package io.baba4.syebatal.bf2
 
-import io.baba4.syebatal.Point
-import io.baba4.syebatal.Battlefield2 as Battlefield
+import io.baba4.syebatal.models.Point
+import io.baba4.syebatal.models.Battlefield2 as Battlefield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
 class BattlefieldDecodeTest : BattlefieldTest() {
     private fun testDecode(input: String, output: Battlefield) =
-        assertEquals(actual = Battlefield.decode(input), expected = output)
+        assertEquals(actual = io.baba4.syebatal.models.Battlefield2.decode(input), expected = output)
 
 
     @Test

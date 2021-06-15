@@ -1,7 +1,7 @@
 package io.baba4.syebatal.elm
 
-import io.baba4.syebatal.Battlefield1
-import io.baba4.syebatal.Player
+import io.baba4.syebatal.models.Battlefield1
+import io.baba4.syebatal.models.Player
 
 
 data class State(

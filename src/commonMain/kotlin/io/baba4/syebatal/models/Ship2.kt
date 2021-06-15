@@ -1,6 +1,6 @@
-package io.baba4.syebatal
+package io.baba4.syebatal.models
 
-import io.baba4.syebatal.BfCell.*
+import io.baba4.syebatal.models.BfCell.*
 
 
 data class Ship2(
