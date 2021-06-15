@@ -1,6 +1,6 @@
 package io.baba4.syebatal
 
-import io.baba4.syebatal.core.elm.State
+import io.baba4.syebatal.elm.State
 
 
 val State.currentPlayer: Player get() = players[currentPlayerIndex]

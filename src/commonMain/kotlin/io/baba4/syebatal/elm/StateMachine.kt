@@ -1,4 +1,4 @@
-package io.baba4.syebatal.core.elm
+package io.baba4.syebatal.elm
 
 
 class StateMachine(
