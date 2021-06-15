@@ -18,6 +18,9 @@ class BattlefieldEncodeDecodeEquivalencyTest {
             ),
             emptyPoints = emptySet(),
         )
-        assertEquals(actual = io.baba4.syebatal.models.Battlefield2.decode(battlefield.encode()), expected = battlefield)
+        assertEquals(
+            actual = io.baba4.syebatal.models.Battlefield2.decode(battlefield.encode()),
+            expected = battlefield
+        )
     }
 }

@@ -69,7 +69,7 @@ detekt {
     toolVersion = "1.17.1"
     failFast = true
     buildUponDefaultConfig = true
-    input = files("$projectDir/src/commonMain")
+    input = files("$projectDir/src/commonMain", "$projectDir/src/commonTest", "$projectDir/src/jvmTest")
     config = files("$projectDir/config/detekt.yml")
 
     reports.html {
