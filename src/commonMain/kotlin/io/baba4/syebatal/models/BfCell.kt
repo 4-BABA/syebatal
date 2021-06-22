@@ -2,9 +2,9 @@ package io.baba4.syebatal.models
 
 
 enum class BfCell(val symbol: Char, val isShip: Boolean) {
-    UNCHECKED(symbol = ' ', isShip = false),
+    UNCHECKED(symbol = 'o', isShip = false),
     EMPTY(symbol = '•', isShip = false),
-    FILLED(symbol = '☐', isShip = true),
+    FILLED(symbol = 'x', isShip = true),
     DAMAGED(symbol = '☒', isShip = true);
 
     val isNotShip: Boolean get() = !isShip

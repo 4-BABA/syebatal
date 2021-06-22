@@ -1,8 +1,10 @@
 package io.baba4.syebatal.models
 
+import io.baba4.syebatal.models.Battlefield1.Companion.MAX_SHIP_SIZE
 import io.baba4.syebatal.models.BfCell.*
 import io.baba4.syebatal.models.Orientation.*
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 
 class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
@@ -21,6 +23,9 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
     }
 
     operator fun Array<Array<BfCell>>.get(point: Point): BfCell = this[point.row][point.column]
+    operator fun Array<Array<BfCell>>.set(point: Point, cell: BfCell) {
+        this[point.row][point.column] = cell
+    }
 
     override fun equals(other: Any?): Boolean =
         other is Battlefield1 && this.size == other.size && this.table.contentDeepEquals(other.table)
@@ -90,9 +95,18 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
     private fun takeVerticalPointsWhileShip(column: Int, range: IntProgression): List<Point> =
         range.map { Point(row = it, column) }.takeWhile { table[it].isShip }
 
+    fun addShip(point1: Point, point2: Point = point1) {
+        addShip(Ship1(point1, point2))
+    }
+
+    fun addShip(ship: Ship1) {
+        ship.points.forEach { table[it] = FILLED }
+        ship.pointsAround(size).forEach { table[it] = EMPTY }
+    }
 
     companion object {
         private const val SEPARATOR = '|'
+        const val MAX_SHIP_SIZE = 3
 
         fun decode(string: String): Battlefield1 {
             require(string.length >= 0) {
@@ -111,3 +125,107 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
     }
 }
 
+fun generate(size: Int): Battlefield1 {
+    val bf = Battlefield1(size) { UNCHECKED }
+    bf.addFirstShip(size)
+    for (shipSize in MAX_SHIP_SIZE - 1 downTo 1) {
+        repeat(MAX_SHIP_SIZE - shipSize + 1) {
+            val (start1, end1) = bf.findSpace(shipSize)
+            bf.addShip(start1, end1)
+        }
+    }
+    // todo: fill singletons especially
+    // todo: replace empties with unchecked (or vise versa)
+    return bf
+}
+
+private fun Battlefield1.addFirstShip(size: Int) {
+    val orientation = Orientation.values().random()
+    val (start, end) = randomStartPoints(orientation, size)
+    val firstShip = Ship1(pointsRange(start, end))
+    addShip(firstShip)
+}
+
+internal fun Battlefield1.findSpace(shipSize: Int): Pair<Point, Point> {
+    val rawRanges = when (Orientation.values().random()) {
+        HORIZONTAL -> uncheckedHorizontalRanges()
+        VERTICAL -> uncheckedVerticalRanges()
+    }
+    val range = rawRanges
+        .filter { distance(it.first, it.second) >= shipSize }
+        .random()
+    return narrow(range, shipSize)
+}
+
+private fun narrow(range: Pair<Point, Point>, shipSize: Int): Pair<Point, Point> {
+    val (start, end) = range
+    val gap = distance(start, end) - shipSize
+    if (gap == 0)
+        return range
+    val shift = Random.nextInt(gap)
+    return if (start.row == end.row) {
+        val newStart = Point(start.row, start.column + shift)
+        val newEnd = Point(newStart.row, newStart.column + shipSize - 1)
+        Pair(newStart, newEnd)
+    } else {
+        val newStart = Point(start.row + shift, start.column)
+        val newEnd = Point(newStart.row + shipSize - 1, newStart.column)
+        Pair(newStart, newEnd)
+    }
+}
+
+internal fun Battlefield1.uncheckedHorizontalRanges(): List<Pair<Point, Point>> {
+    val ranges = mutableListOf<Pair<Point, Point>>()
+    val append: (MutableList<Point>) -> Unit = { pretender ->
+        if (pretender.isNotEmpty())
+            ranges.add(Pair(pretender.first(), pretender.last()))
+    }
+    for (row in 0 until size) {
+        var pretender = mutableListOf<Point>()
+        for (col in 0 until size) {
+            if (UNCHECKED == table[row][col]) {
+                pretender.add(Point(row, col))
+            } else {
+                append(pretender)
+                pretender = mutableListOf()
+            }
+        }
+        append(pretender)
+    }
+    return ranges
+}
+
+internal fun Battlefield1.uncheckedVerticalRanges(): List<Pair<Point, Point>> {
+    val ranges = mutableListOf<Pair<Point, Point>>()
+    val append: (MutableList<Point>) -> Unit = { pretender ->
+        if (pretender.isNotEmpty())
+            ranges.add(Pair(pretender.first(), pretender.last()))
+    }
+    // todo: refactor
+    for (col in 0 until size) {
+        var pretender = mutableListOf<Point>()
+        for (row in 0 until size) {
+            if (UNCHECKED == table[row][col]) {
+                pretender.add(Point(row, col))
+            } else {
+                append(pretender)
+                pretender = mutableListOf()
+            }
+        }
+        append(pretender)
+    }
+    return ranges
+}
+
+internal fun randomStartPoints(orientation: Orientation, size: Int) = when (orientation) {
+    HORIZONTAL -> {
+        val start = Point(Random.nextInt(size), Random.nextInt(size - MAX_SHIP_SIZE))
+        val end = Point(start.row, start.column + MAX_SHIP_SIZE - 1)
+        start to end
+    }
+    VERTICAL -> {
+        val start = Point(Random.nextInt(size - MAX_SHIP_SIZE), Random.nextInt(size))
+        val end = Point(start.row + MAX_SHIP_SIZE - 1, start.column)
+        start to end
+    }
+}
