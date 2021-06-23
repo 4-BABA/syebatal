@@ -1,7 +1,8 @@
 package io.baba4.syebatal.models
 
 import io.baba4.syebatal.models.BfCell.*
-import io.baba4.syebatal.models.Orientation.*
+import io.baba4.syebatal.models.Orientation.HORIZONTAL
+import io.baba4.syebatal.models.Orientation.VERTICAL
 import kotlin.math.sqrt
 
 
@@ -21,6 +22,9 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
     }
 
     operator fun Array<Array<BfCell>>.get(point: Point): BfCell = this[point.row][point.column]
+    operator fun Array<Array<BfCell>>.set(point: Point, cell: BfCell) {
+        this[point.row][point.column] = cell
+    }
 
     override fun equals(other: Any?): Boolean =
         other is Battlefield1 && this.size == other.size && this.table.contentDeepEquals(other.table)
@@ -90,9 +94,18 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
     private fun takeVerticalPointsWhileShip(column: Int, range: IntProgression): List<Point> =
         range.map { Point(row = it, column) }.takeWhile { table[it].isShip }
 
+    fun addShip(point1: Point, point2: Point = point1) {
+        addShip(Ship1(pointsRange(point1, point2)))
+    }
+
+    fun addShip(ship: Ship1) {
+        ship.points.forEach { table[it] = FILLED }
+        ship.pointsAround(size).forEach { table[it] = EMPTY }
+    }
 
     companion object {
         private const val SEPARATOR = '|'
+        const val MAX_SHIP_SIZE = 3 // todo: evaluate this
 
         fun decode(string: String): Battlefield1 {
             require(string.length >= 0) {
@@ -110,4 +123,3 @@ class Battlefield1(val size: Int, initial: (Point) -> BfCell) {
         }
     }
 }
-

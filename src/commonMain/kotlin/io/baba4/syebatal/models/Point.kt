@@ -1,5 +1,7 @@
 package io.baba4.syebatal.models
 
+import kotlin.math.abs
+
 
 data class Point(val row: Int, val column: Int)
 
@@ -24,3 +26,15 @@ fun Point.pointsAround(bfSize: Int): Set<Point> = setOfNotNull(
     left(bfSize), top(bfSize), right(bfSize), bottom(bfSize),
     topLeft(bfSize), topRight(bfSize), bottomLeft(bfSize), bottomRight(bfSize)
 )
+
+fun pointsRange(a: Point, b: Point) =
+    if (a.row == b.row)
+        (a.column..b.column).map { Point(a.row, it) }
+    else
+        (a.row..b.row).map { Point(it, a.column) }
+
+fun distance(a: Point, b: Point) =
+    if (a.row == b.row)
+        abs(a.column - b.column) + 1
+    else
+        abs(a.row - b.row) + 1
