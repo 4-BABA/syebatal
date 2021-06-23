@@ -35,6 +35,6 @@ fun pointsRange(a: Point, b: Point) =
 
 fun distance(a: Point, b: Point) =
     if (a.row == b.row)
-        abs(a.column - b.column)
+        abs(a.column - b.column) + 1
     else
-        abs(a.row - b.row)
+        abs(a.row - b.row) + 1
