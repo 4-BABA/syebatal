@@ -5,17 +5,13 @@ class Battlefield {
 
     val matrix = Matrix(SIDE_SIZE)
 
-    fun addShip(point1: Point) {
-        addShip(point1, point1)
-    }
-
-    fun addShip(point1: Point, point2: Point) {
+    fun addShip(point1: Point, point2: Point = point1) {
         val ship = pointsRange(point1, point2)
         ship.forEach {
-            matrix.set(it, BattlefieldValue.FILLED)
+            matrix[it] = BattlefieldCell.FILLED
         }
         ship.spaceAround()
-            .forEach { matrix.set(it, BattlefieldValue.EMPTY) }
+            .forEach { matrix[it] = BattlefieldCell.EMPTY }
     }
 
     private fun valid(point: Point) =
@@ -24,65 +20,33 @@ class Battlefield {
 
     private fun isVertical(ship: List<Point>) = ship.first().x == ship.last().x
 
-    // visualisation for vertical ship
-    // [ prePreHead ]    ....    [ postPreHead ]
-    //      ....       [ ship ]       ....
-    //      ....       [ ship ]       ....
-    // [ prePostEnd ]    ....    [ postPostEnd ]
-    private fun getPreHeadAndPostTail(ship: List<Point>): Collection<Point> {
-        val prePreHead: Point
-        val postPreHead: Point
-        val prePostEnd: Point
-        val postPostEnd: Point
-        if (isVertical(ship)) {
-            prePreHead = Point(ship.first().x - 1, ship.first().y - 1)
-            postPreHead = Point(ship.first().x + 1, ship.first().y - 1)
-            prePostEnd = Point(ship.last().x - 1, ship.last().y + 1)
-            postPostEnd = Point(ship.last().x + 1, ship.last().y + 1)
-
-        } else {
-            prePreHead = Point(ship.first().x - 1, ship.first().y - 1)
-            postPreHead = Point(ship.first().x - 1, ship.first().y + 1)
-            prePostEnd = Point(ship.last().x + 1, ship.last().y - 1)
-            postPostEnd = Point(ship.last().x + 1, ship.last().y + 1)
-        }
-        val pointsRange = pointsRange(prePreHead, postPreHead)
-        return pointsRange.union(pointsRange(prePostEnd, postPostEnd))
-    }
-
-    private fun getBodyFat(ship: List<Point>): List<Point> {
-        val vertical = isVertical(ship)
-        val bodyFat = mutableListOf<Point>()
-        ship.forEach { point ->
-            if (vertical) {
-                bodyFat.add(Point(point.x - 1, point.y))
-                bodyFat.add(Point(point.x + 1, point.y))
-            } else {
-                bodyFat.add(Point(point.x, point.y - 1))
-                bodyFat.add(Point(point.x, point.y + 1))
-            }
-        }
-        return bodyFat
-    }
-
     private fun List<Point>.spaceAround(): List<Point> {
-        return getBodyFat(this)
-            .union(getPreHeadAndPostTail(this))
+        val first = this.first()
+        val last = this.last()
+
+        val upperLeft = Point(first.x - 1, first.y - 1)
+        val lowerLeft: Point
+        val upperRight: Point
+        val lowerRight = Point(last.x + 1, last.y + 1)
+
+        if (isVertical(this)) {
+            lowerLeft = Point(last.x - 1, last.y + 1)
+            upperRight = Point(first.x + 1, first.y - 1)
+        } else {
+            lowerLeft = Point(first.x - 1, first.y + 1)
+            upperRight = Point(last.x + 1, last.y - 1)
+        }
+
+        return pointsRange(upperLeft, upperRight)
+            .union(pointsRange(upperLeft, lowerLeft))
+            .union(pointsRange(upperRight, lowerRight))
+            .union(pointsRange(lowerLeft, lowerRight))
             .filter { valid(it) }
     }
 }
 
-fun main() {
-    val battlefield = Battlefield()
-    battlefield.addShip(Point(0, 0), Point(2, 0))
-    battlefield.addShip(Point(4, 2), Point(4, 3))
-    battlefield.addShip(Point(1, 5))
-    battlefield.addShip(Point(6, 6))
-    battlefield.matrix.prettyPrint()
-}
-
-fun pointsRange(points1: Point, points2: Point) =
-    if (points1.x == points2.x)
-        (points1.y..points2.y).map { Point(points1.x, it) }
+fun pointsRange(point1: Point, point2: Point) =
+    if (point1.x == point2.x)
+        (point1.y..point2.y).map { Point(point1.x, it) }
     else
-        (points1.x..points2.x).map { Point(it, points1.y) }
+        (point1.x..point2.x).map { Point(it, point1.y) }

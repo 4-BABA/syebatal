@@ -3,15 +3,21 @@ import kotlin.math.sqrt
 
 data class Point(val x: Int, val y: Int)
 
-// TODO : Iterable<BattlefieldValue>
-class Matrix {
+typealias MatrixArray<T> = Array<Array<T>>
+
+inline fun <reified T> matrixArray(size: Int, initial: T): MatrixArray<T> {
+    require(size > 0)
+    return Array(size) { Array(size) { initial } }
+}
+
+class Matrix : Iterable<BattlefieldCell> {
 
     private val size: Int
-    private val matrix: Array<Array<BattlefieldValue>>
+    private val matrix: MatrixArray<BattlefieldCell>
 
     constructor(size: Int) {
         this.size = size
-        this.matrix = Array(size) { Array(size) { BattlefieldValue.UNKNOWN } }
+        this.matrix = matrixArray(size, BattlefieldCell.UNKNOWN)
     }
 
     constructor(chars: CharArray) {
@@ -21,55 +27,55 @@ class Matrix {
             throw IllegalArgumentException()
         }
         size = root.toInt()
-        this.matrix = Array(size) { Array(size) { BattlefieldValue.UNKNOWN } }
+        matrix = matrixArray(size, BattlefieldCell.UNKNOWN)
         val chunkedChars = chars.toList().chunked(size)
-        chunkedChars.withIndex().forEach { (rowIdx, chunk) ->
-            val row = getRow(rowIdx)
-            chunk.withIndex().forEach { (colIdx, c) ->
-                row[colIdx] = BattlefieldValue.toVal(c)
+        chunkedChars.forEachIndexed { row, chunk ->
+            chunk.forEachIndexed { col, char ->
+                matrix[row][col] = BattlefieldCell.fromSymbol(char)
             }
         }
     }
 
     constructor(str: String) : this(str.toCharArray())
 
-    fun get(rowNum: Int, colNum: Int) = matrix[rowNum][colNum]
-    fun set(rowNum: Int, colNum: Int, value: BattlefieldValue) {
-        matrix[rowNum][colNum] = value
+    fun get(row: Int, col: Int) = matrix[row][col]
+    fun set(row: Int, col: Int, value: BattlefieldCell) {
+        matrix[row][col] = value
     }
-    fun set(points: Point, value: BattlefieldValue) {
+
+    operator fun set(points: Point, value: BattlefieldCell) {
         matrix[points.y][points.x] = value
     }
 
     fun getRow(num: Int) = matrix[num]
     fun getCol(num: Int) = matrix.map { arr -> arr[num] }.toTypedArray()
 
-    override fun toString(): String {
-        val stringBuilder = StringBuilder()
-        matrix.forEach { row -> row.forEach {
-            cell -> stringBuilder.append(cell.toString())
-        } }
-        return stringBuilder.toString()
-    }
+    override fun toString() =
+        matrix.joinToString(separator = "") { it.joinToString(separator = "") }
 
     fun prettyPrint() {
         matrix.forEach { row ->
-            row.withIndex().forEach { (index, cell) ->
+            row.forEachIndexed { index, cell ->
                 print(if (index == row.size - 1) "$cell " else "$cell | ")
             }
             println()
         }
     }
 
+    override fun iterator() = object : Iterator<BattlefieldCell> {
+        var row = 0
+        var col = 0
 
-}
+        override fun hasNext() = row + 1 < size || col + 1 < size
 
-fun main() {
-    Matrix(("     .x" +
-            " ... .." +
-            " .x.   " +
-            " .x.   " +
-            " ......" +
-            "  .xxx." +
-            "  .....")).prettyPrint()
+        override fun next(): BattlefieldCell {
+            if (col + 1 < size) {
+                col++
+            } else {
+                row++
+                col = 0
+            }
+            return matrix[row][col]
+        }
+    }
 }
