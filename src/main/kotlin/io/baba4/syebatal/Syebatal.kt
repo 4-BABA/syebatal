@@ -2,18 +2,16 @@
 
 package io.baba4.syebatal
 
+import com.baba4.syebatal.models.Action
 import io.ktor.serialization.kotlinx.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
-import io.ktor.websocket.*
-import io.ktor.websocket.serialization.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.json.Json
 import java.time.Duration
-import java.util.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -42,10 +40,15 @@ private fun Application.configureRouting() {
         }
 
         webSocket("/join") {
-            registerPlayer(this)
+//            registerPlayer(this)
             while (true) {
-                val action = receiveDeserialized<Action>()
 
+                val action = receiveDeserialized<Action>()
+                when (action) {
+                    is Action.Preparation -> TODO()
+                    is Action.Placement -> TODO()
+                    is Action.Game -> TODO()
+                }
             }
         }
     }

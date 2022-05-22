@@ -11,6 +11,7 @@ plugins {
     kotlin("plugin.serialization") version "1.6.10"
 }
 
+@Suppress("UnstableApiUsage")
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
 }
@@ -41,11 +42,11 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
 }
 
 detekt {
     toolVersion = detektVersion
-    failFast = true
     buildUponDefaultConfig = true
     input = files("$projectDir/src/commonMain")
     config = files("$projectDir/config/detekt.yml")
