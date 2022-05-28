@@ -3,6 +3,8 @@
 package io.baba4.syebatal
 
 import com.baba4.syebatal.models.Action
+import com.baba4.syebatal.models.PlayerId
+import io.baba4.syebatal.elm.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -12,6 +14,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.json.Json
 import java.time.Duration
+import java.util.UUID
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -33,6 +36,8 @@ private fun Application.configureSockets() {
     }
 }
 
+val stageStorage = StageStorage()
+
 private fun Application.configureRouting() {
     routing {
         get("/") {
@@ -40,16 +45,20 @@ private fun Application.configureRouting() {
         }
 
         webSocket("/join") {
-//            registerPlayer(this)
+            val playerId = registerPlayer()
+            val preparationStage = stageStorage.getPreparationStage()
             while (true) {
-
-                val action = receiveDeserialized<Action>()
-                when (action) {
-                    is Action.Preparation -> TODO()
+                when (val action = receiveDeserialized<Action>()) {
+                    is Action.Preparation -> preparationStage.store.setAction(action, playerId)
                     is Action.Placement -> TODO()
                     is Action.Game -> TODO()
                 }
             }
         }
     }
+}
+
+fun registerPlayer(): PlayerId {
+    // TODO: save player somewhere
+    return (0L .. Long.MAX_VALUE).random()
 }

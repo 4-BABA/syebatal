@@ -1,17 +1,18 @@
 package io.baba4.syebatal.elm
 
+import com.baba4.syebatal.models.Action
+import com.baba4.syebatal.models.PlayerId
+import com.baba4.syebatal.models.ViewData
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 
 interface Elm {
     interface State
-    interface Action
     interface Effect
-    interface ViewData
 
     fun interface Reducer<S : State, A : Action, E : Effect> {
-        fun reduce(state: S, action: A): Pair<S, E?>
+        fun reduce(state: S, action: A, playerId: PlayerId): Pair<S, E?>
     }
 
     fun interface EffectHandler<E : Effect, A : Action> {
@@ -26,10 +27,10 @@ interface Elm {
         val reducer: Reducer<S, A, E>
         val effectHandler: EffectHandler<E, A>
 
-        fun start()
-        fun stop()
+        fun attach()
+        fun detach()
 
-        fun setAction(action: A)
+        fun setAction(action: A, playerId: PlayerId)
 
         val stateFlow: StateFlow<S>
         val currentState: S get() = stateFlow.value
@@ -50,25 +51,25 @@ interface Elm {
         override val reducer: Reducer<S, A, E>,
         override val effectHandler: EffectHandler<E, A>,
     ) : Store<S, A, E> {
-        private val actionFlow = MutableSharedFlow<A>()
+        private val actionFlow = MutableSharedFlow<Pair<A, PlayerId>>()
         private var actionScope: CoroutineScope = createNewActionScope()
 
-        override fun start() {
+        override fun attach() {
             actionScope.launch {
-                actionFlow.collect { newAction ->
+                actionFlow.collect { (newAction, playerId) ->
                     ensureActive()
-                    onActionReceived(newAction)
+                    onActionReceived(newAction, playerId)
                 }
             }
         }
 
-        override fun stop() {
+        override fun detach() {
             actionScope.cancel()
             actionScope = createNewActionScope()
         }
 
-        override fun setAction(action: A) {
-            actionScope.launch { actionFlow.emit(action) }
+        override fun setAction(action: A, playerId: PlayerId) {
+            actionScope.launch { actionFlow.emit(action to playerId) }
         }
 
         private fun createNewActionScope() = CoroutineScope(Dispatchers.Default)
@@ -80,8 +81,8 @@ interface Elm {
             stateFlow.map(converter::convert)
 
 
-        private suspend fun onActionReceived(action: A) {
-            val (newState, effect) = reducer.reduce(currentState, action)
+        private suspend fun onActionReceived(action: A, playerId: PlayerId) {
+            val (newState, effect) = reducer.reduce(currentState, action, playerId)
 
             if (newState != currentState) {
                 stateFlow.emit(newState)
@@ -89,7 +90,7 @@ interface Elm {
 
             if (effect != null) actionScope.launch {
                 val newAction = effectHandler.handle(effect)
-                if (newAction != null) actionFlow.emit(newAction)
+                if (newAction != null) actionFlow.emit(newAction to playerId)
             }
         }
     }
